@@ -1,0 +1,3 @@
+[submodule "Gamepad"]
+	path = Gamepad
+	url = https://github.com/heckelson/Gamepad.git

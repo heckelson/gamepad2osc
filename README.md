@@ -2,6 +2,11 @@
 
 This is a program plugging together `python-osc` and [Gamepad](https://github.com/piborg/Gamepad) in order to control music instruments in [PureData](https://puredata.info/).
 
+## How to run
+
+* Run `pipenv install` to install the packages in the Pipfile.
+* Run `pipenv run python main.py <hostname> <port>` and plug in your Controller.
+
 ## Project Outline
 
 `main.py` contains just the argparsing and then starts the PS4GamepadManager.

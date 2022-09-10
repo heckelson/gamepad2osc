@@ -7,6 +7,7 @@ from networking.UdpMsgSender import UdpMsgSender
 
 class PS4GamepadManager:
     def __init__(self, converter: InputOSCConverter, sender: UdpMsgSender):
+        assert converter is not None and sender is not None
         self.converter = converter
         self.sender = sender
 
@@ -14,15 +15,13 @@ class PS4GamepadManager:
         # Gamepad settings
         self.gamepadType = Controllers.PS4
 
-        # symbol buttons
+        # buttons
         self.buttonCross = 'CROSS'
         self.buttonSquare = 'SQUARE'
         self.buttonCircle = 'CIRCLE'
         self.buttonTriangle = 'TRIANGLE'
-
         self.buttonL1 = 'L1'
         self.buttonR1 = 'R1'
-
         self.buttonPS = 'PS'
 
         # axes
@@ -33,9 +32,13 @@ class PS4GamepadManager:
         self.triggerLeft = 'L2'
         self.triggerRight = 'R2'
 
+        # dpad
+
         self.dpadX = 'DPAD-X'
         self.dpadY = 'DPAD-Y'
 
+        # I'm using a dpad status because it would otherwise send 1 and -1, but
+        # I want 1 to be sent on button press and 0 sent on release.
         self.dpadDown = "DPAD-DOWN"
         self.dpadUp = "DPAD-UP"
         self.dpadLeft = "DPAD-LEFT"
@@ -72,7 +75,6 @@ class PS4GamepadManager:
         gamepad.addButtonChangedHandler(self.buttonSquare, self.square_button_changed)
         gamepad.addButtonChangedHandler(self.buttonTriangle, self.triangle_button_changed)
         gamepad.addButtonChangedHandler(self.buttonCircle, self.circle_button_changed)
-
         gamepad.addButtonChangedHandler(self.buttonL1, self.l1_button_changed)
         gamepad.addButtonChangedHandler(self.buttonR1, self.r1_button_changed)
 
@@ -149,8 +151,9 @@ class PS4GamepadManager:
     def right_trigger_moved(self, position):
         self._send_axis_message(self.triggerRight, position)
 
-    # for the dpad we send button messages instead of axis ones.
     def dpad_x_moved(self, position):
+        # this is written such that we
+        # send messages 1/0 on press/release
         if int(position) == 1:
             self._send_button_message(self.dpadRight, 1)
             self.dpad_status['right'] = True
